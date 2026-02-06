@@ -492,6 +492,68 @@
     </div>
 
     <!-- Toast Notification -->
+    <!-- Password Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal-box password-modal">
+            <div class="modal-header">
+                <h3><i class="fas fa-lock"></i> Enter Password to Access Dashboard</h3>
+                <button class="modal-close" onclick="closePasswordModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="password-info">
+                    <div class="student-info-badge">
+                        <i class="fas fa-user-circle"></i>
+                        <div>
+                            <strong id="passwordStudentName"></strong>
+                            <p id="passwordStudentMeta"></p>
+                        </div>
+                    </div>
+                    <div class="password-instructions">
+                        <p><i class="fas fa-info-circle"></i> Enter your student password or teacher password to continue</p>
+                    </div>
+                </div>
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label for="dashboardPassword">
+                            <i class="fas fa-key"></i> Password
+                        </label>
+                        <div class="password-input-wrapper">
+                            <input 
+                                type="password" 
+                                id="dashboardPassword" 
+                                placeholder="Enter password"
+                                autocomplete="off"
+                                required
+                            >
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+                                <i class="fas fa-eye" id="passwordToggleIcon"></i>
+                            </button>
+                        </div>
+                        <div class="password-hint" id="passwordHint"></div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-secondary" onclick="closePasswordModal()">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-unlock"></i> Access Dashboard
+                        </button>
+                    </div>
+                </form>
+                <div class="password-help">
+                    <p class="help-text">
+                        <i class="fas fa-question-circle"></i> 
+                        Parents: Use your unique student password<br>
+                        Teachers: Use the master teacher password
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
     <script src="../js/dashboard-script.js"></script>

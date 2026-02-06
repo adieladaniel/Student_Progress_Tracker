@@ -1,386 +1,3 @@
-// // Dashboard Script
-// // Student Database (from Excel file)
-// const STUDENTS_DATABASE = {
-//     "Kothanur": {
-//         "Daycare": ["Sherilyn Sijipaul"],
-//         "PP1": ["Rithwika V", "Xodus", "Chris Robinson", "ADINA A (Kushi Gowda . A)"],
-//         "PP2": ["Deekshant Tamang", "Sanvi Ram R", "Bharthi Seervi", "Dhuvika .M", "Priyanshu Das", "Dhaanvi. Y"],
-//         "PP3": ["Sathvik  Eshasn .B", "Sreesit Budha"]
-//     },
-//     "Chellikere": {
-//         "Daycare": ["Aaradhya sharma", "Srirangam Adharsh Raj", "Gideon .A", "Sana Gladiya .D", "R. Sudeep", "Tabitha .S", "Trilochan. G", "Rohan Prahlad Sahani", "Krishang .S"],
-//         "PP1": ["Aashritha .D", "Aathira .P", "Abhishek william .k", "K. Ananya", "Anwesha Ghara", "Aryan Ali nazar", "Dhakshit. A", "Dhanya. A", "Dhanvika Tirupati", "Nathan Joshua", "Neetish D Raju", "G.S. Ruthisha", "Sashmika. R", "Samrat .A"],
-//         "PP2": ["Aakaankshaa .R", "Aden Prince .D", "N. Yasitha", "Hanvika .C", "Prajin. G", "Charvik. G", "Adeteya Kumar", "A. Sansa", "Hazel Rozario", "Erwin Benjamin Felix", "Angel Deborah .P", "Shalem Dhedeep . Raj", "D. lingesh", "Disha Diya Dsouza", "Khushi Mutnal", "Yashas Gowda .H", "Anya Prajapati", "Liam Samuel Jikku", "Daniyal Pariyar", "Anvika Emmanuel .S", "Mokshal .M"],
-//         "PP3": ["Advith. K", "Dhanvika .N", "Divyanshi Sharma", "Cheguru Gritik Rama", "J. Hanvika", "Jessica Mikaela .M", "Jeslyn B", "Navyashri", "S. Nithwin Tej", "Rishika Chandra", "Kothapalli Rushil Vedansh", "Ruth Mansianmuang", "Samanvitha. M", "Vedanth .G", "Yalamakuri Yashwin", "Mannam Yeshashwi", "Nelson .A", "Leeya .RK", "Deborah James"]
-//     }
-// };
-
-// // State management
-// let currentBranch = '';
-// let currentClass = '';
-// let currentStudent = null;
-// let studentAttendance = [];
-// let studentNotes = [];
-
-// // DOM Elements
-// const branchSelect = document.getElementById('branchSelect');
-// const classSelect = document.getElementById('classSelect');
-// const studentsGrid = document.getElementById('studentsGrid');
-// const studentsList = document.getElementById('studentsList');
-// const selectionSection = document.getElementById('selectionSection');
-// const dashboardSection = document.getElementById('dashboardSection');
-// const toast = document.getElementById('toast');
-
-// // Initialize
-// document.addEventListener('DOMContentLoaded', () => {
-//     // Set current date
-//     const today = new Date();
-//     const dateStr = today.toLocaleDateString('en-IN', {
-//         weekday: 'short',
-//         year: 'numeric',
-//         month: 'short',
-//         day: 'numeric'
-//     });
-//     document.getElementById('currentDate').textContent = dateStr;
-
-//     // Event listeners
-//     branchSelect.addEventListener('change', handleBranchChange);
-//     classSelect.addEventListener('change', handleClassChange);
-    
-//     // Note form submission
-//     document.getElementById('noteForm').addEventListener('submit', handleNoteSubmit);
-    
-//     // Image preview
-//     document.getElementById('noteImages').addEventListener('change', handleImagePreview);
-// });
-
-// // Branch selection handler
-// function handleBranchChange(e) {
-//     currentBranch = e.target.value;
-//     classSelect.disabled = false;
-//     classSelect.value = '';
-//     studentsGrid.style.display = 'none';
-    
-//     if (currentBranch) {
-//         // Populate class dropdown
-//         const classes = Object.keys(STUDENTS_DATABASE[currentBranch]);
-//         classSelect.innerHTML = '<option value="">-- Select Class --</option>';
-//         classes.forEach(cls => {
-//             const option = document.createElement('option');
-//             option.value = cls;
-//             option.textContent = cls;
-//             classSelect.appendChild(option);
-//         });
-//     } else {
-//         classSelect.disabled = true;
-//         classSelect.innerHTML = '<option value="">-- Select Class --</option>';
-//     }
-// }
-
-// // Class selection handler
-// function handleClassChange(e) {
-//     currentClass = e.target.value;
-    
-//     if (currentClass) {
-//         loadStudents();
-//     } else {
-//         studentsGrid.style.display = 'none';
-//     }
-// }
-
-// // Load students for selected branch and class
-// function loadStudents() {
-//     const students = STUDENTS_DATABASE[currentBranch][currentClass] || [];
-    
-//     if (students.length === 0) {
-//         showToast('No students found for this class', 'error');
-//         return;
-//     }
-    
-//     studentsList.innerHTML = students.map((student, index) => `
-//         <div class="student-card" onclick="selectStudent('${student}', ${index + 1})">
-//             <div class="student-card-icon">
-//                 <i class="fas fa-user-circle"></i>
-//             </div>
-//             <h4>${student}</h4>
-//             <div class="student-card-meta">
-//                 Roll No: ${index + 1} • ${currentClass}
-//             </div>
-//         </div>
-//     `).join('');
-    
-//     studentsGrid.style.display = 'block';
-// }
-
-// // Select student and show dashboard
-// async function selectStudent(name, rollNo) {
-//     currentStudent = {
-//         name: name,
-//         rollNo: rollNo,
-//         class: currentClass,
-//         branch: currentBranch
-//     };
-    
-//     // Hide selection, show dashboard
-//     selectionSection.style.display = 'none';
-//     dashboardSection.style.display = 'block';
-    
-//     // Update student info
-//     document.getElementById('studentName').textContent = name;
-//     document.getElementById('studentRoll').textContent = rollNo;
-//     document.getElementById('studentClass').textContent = currentClass;
-//     document.getElementById('studentBranch').textContent = currentBranch;
-    
-//     // Load attendance data
-//     await loadAttendanceData();
-    
-//     // Load notes
-//     loadNotes();
-    
-//     // Scroll to top
-//     window.scrollTo(0, 0);
-// }
-
-// // Load attendance data from database
-// async function loadAttendanceData() {
-//     try {
-//         const response = await fetch(`../api/get-attendance.php?rollno=${currentStudent.rollNo}&class=${currentStudent.class}&branch=${currentStudent.branch}`);
-//         const data = await response.json();
-        
-//         if (data.success) {
-//             studentAttendance = data.attendance;
-//             updateAttendanceStats();
-//             renderAttendanceList();
-//         } else {
-//             showToast('Error loading attendance data', 'error');
-//         }
-//     } catch (error) {
-//         console.error('Error:', error);
-//         showToast('Network error. Please try again.', 'error');
-//     }
-// }
-
-// // Update attendance statistics
-// function updateAttendanceStats() {
-//     const presentDays = studentAttendance.filter(a => a.status === 'Present').length;
-//     const absentDays = studentAttendance.filter(a => a.status === 'Absent').length;
-//     const totalDays = studentAttendance.length;
-//     const percentage = totalDays > 0 ? ((presentDays / totalDays) * 100).toFixed(1) : 0;
-    
-//     document.getElementById('presentCount').textContent = presentDays;
-//     document.getElementById('absentCount').textContent = absentDays;
-//     document.getElementById('totalDays').textContent = totalDays;
-//     document.getElementById('attendancePercentage').textContent = percentage + '%';
-// }
-
-// // Render attendance list
-// function renderAttendanceList() {
-//     const listHtml = studentAttendance.length > 0 
-//         ? studentAttendance.map(record => `
-//             <div class="attendance-item">
-//                 <span class="attendance-date">${formatDate(record.date)}</span>
-//                 <span class="attendance-status ${record.status === 'Present' ? 'status-present' : 'status-absent'}">
-//                     ${record.status}
-//                 </span>
-//             </div>
-//         `).join('')
-//         : '<div class="no-notes">No attendance records found</div>';
-    
-//     document.getElementById('attendanceList').innerHTML = listHtml;
-// }
-
-// // Toggle between list and calendar view
-// function toggleView(view) {
-//     const listView = document.getElementById('attendanceList');
-//     const calendarView = document.getElementById('attendanceCalendar');
-//     const buttons = document.querySelectorAll('.btn-toggle');
-    
-//     buttons.forEach(btn => {
-//         btn.classList.toggle('active', btn.dataset.view === view);
-//     });
-    
-//     if (view === 'list') {
-//         listView.style.display = 'block';
-//         calendarView.style.display = 'none';
-//     } else {
-//         listView.style.display = 'none';
-//         calendarView.style.display = 'grid';
-//         renderAttendanceCalendar();
-//     }
-// }
-
-// // Render attendance calendar
-// function renderAttendanceCalendar() {
-//     const calendar = document.getElementById('attendanceCalendar');
-//     const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    
-//     let html = daysOfWeek.map(day => `
-//         <div class="calendar-day empty" style="background: #f7fafc; font-weight: 700;">${day}</div>
-//     `).join('');
-    
-//     // Get current month's data
-//     const today = new Date();
-//     const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
-//     const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-    
-//     // Add empty cells for days before month starts
-//     for (let i = 0; i < firstDay.getDay(); i++) {
-//         html += '<div class="calendar-day empty"></div>';
-//     }
-    
-//     // Add days of the month
-//     for (let day = 1; day <= lastDay.getDate(); day++) {
-//         const date = new Date(today.getFullYear(), today.getMonth(), day);
-//         const dateStr = date.toISOString().split('T')[0];
-//         const record = studentAttendance.find(a => a.date === dateStr);
-        
-//         const className = record 
-//             ? (record.status === 'Present' ? 'present' : 'absent')
-//             : 'empty';
-        
-//         html += `<div class="calendar-day ${className}" title="${record ? record.status : 'No record'}">${day}</div>`;
-//     }
-    
-//     calendar.innerHTML = html;
-// }
-
-// // Load notes (from localStorage for demo)
-// function loadNotes() {
-//     const notesKey = `notes_${currentStudent.rollNo}_${currentStudent.class}_${currentStudent.branch}`;
-//     const savedNotes = localStorage.getItem(notesKey);
-//     studentNotes = savedNotes ? JSON.parse(savedNotes) : [];
-//     renderNotes();
-// }
-
-// // Render notes
-// function renderNotes() {
-//     const notesHtml = studentNotes.length > 0
-//         ? studentNotes.map(note => `
-//             <div class="note-item">
-//                 <div class="note-header">
-//                     <span class="note-date">${formatDate(note.date)}</span>
-//                 </div>
-//                 <div class="note-text">${note.text}</div>
-//                 ${note.images && note.images.length > 0 ? `
-//                     <div class="note-images">
-//                         ${note.images.map(img => `
-//                             <img src="${img}" alt="Note image" class="note-image" onclick="viewImage('${img}')">
-//                         `).join('')}
-//                     </div>
-//                 ` : ''}
-//             </div>
-//         `).join('')
-//         : '<div class="no-notes">No notes yet. Teachers can add notes and updates here.</div>';
-    
-//     document.getElementById('notesList').innerHTML = notesHtml;
-// }
-
-// // Open note modal
-// function openNoteModal() {
-//     document.getElementById('noteModal').classList.add('open');
-// }
-
-// // Close note modal
-// function closeNoteModal() {
-//     document.getElementById('noteModal').classList.remove('open');
-//     document.getElementById('noteForm').reset();
-//     document.getElementById('imagePreview').innerHTML = '';
-// }
-
-// // Handle image preview
-// function handleImagePreview(e) {
-//     const files = Array.from(e.target.files);
-//     const preview = document.getElementById('imagePreview');
-    
-//     preview.innerHTML = '';
-    
-//     files.forEach(file => {
-//         const reader = new FileReader();
-//         reader.onload = (e) => {
-//             const img = document.createElement('img');
-//             img.src = e.target.result;
-//             img.className = 'preview-image';
-//             preview.appendChild(img);
-//         };
-//         reader.readAsDataURL(file);
-//     });
-// }
-
-// // Handle note submission
-// function handleNoteSubmit(e) {
-//     e.preventDefault();
-    
-//     const noteText = document.getElementById('noteText').value;
-//     const imageFiles = document.getElementById('noteImages').files;
-    
-//     // Convert images to base64
-//     const imagePromises = Array.from(imageFiles).map(file => {
-//         return new Promise((resolve) => {
-//             const reader = new FileReader();
-//             reader.onload = (e) => resolve(e.target.result);
-//             reader.readAsDataURL(file);
-//         });
-//     });
-    
-//     Promise.all(imagePromises).then(images => {
-//         const newNote = {
-//             id: Date.now(),
-//             date: new Date().toISOString().split('T')[0],
-//             text: noteText,
-//             images: images
-//         };
-        
-//         studentNotes.unshift(newNote);
-        
-//         // Save to localStorage
-//         const notesKey = `notes_${currentStudent.rollNo}_${currentStudent.class}_${currentStudent.branch}`;
-//         localStorage.setItem(notesKey, JSON.stringify(studentNotes));
-        
-//         renderNotes();
-//         closeNoteModal();
-//         showToast('Note added successfully!', 'success');
-//     });
-// }
-
-// // View image in full size
-// function viewImage(src) {
-//     window.open(src, '_blank');
-// }
-
-// // Go back to selection
-// function goBack() {
-//     dashboardSection.style.display = 'none';
-//     selectionSection.style.display = 'block';
-//     currentStudent = null;
-// }
-
-// // Format date
-// function formatDate(dateStr) {
-//     const date = new Date(dateStr);
-//     return date.toLocaleDateString('en-IN', {
-//         weekday: 'short',
-//         year: 'numeric',
-//         month: 'short',
-//         day: 'numeric'
-//     });
-// }
-
-// // Show toast notification
-// function showToast(message, type = 'info') {
-//     toast.textContent = message;
-//     toast.className = 'toast show ' + type;
-    
-//     setTimeout(() => {
-//         toast.classList.remove('show');
-//     }, 4000);
-// }
-
-// console.log('Personal Dashboard loaded successfully!');
-
-
-
-
-
 // Dashboard Script
 // Student Database (from Excel file)
 const STUDENTS_DATABASE = {
@@ -438,6 +55,19 @@ let studentAttendance = [];
 let studentNotes = [];
 let studentCurriculum = {};
 let progressChart = null;
+let pendingStudentAccess = null; // Store student info while waiting for password
+
+// Master teacher password - CHANGE THIS TO YOUR PREFERRED PASSWORD
+const TEACHER_PASSWORD = 'ilb@2026';
+
+// Function to generate student password based on roll number and name
+function generateStudentPassword(rollNo, name, branch) {
+    // Simple password generation: first 3 letters of name + rollno + first 3 letters of branch
+    // Example: "Rit1Kot" for Rithwika, Roll 1, Kothanur
+    const namePrefix = name.substring(0, 3).toLowerCase();
+    const branchPrefix = branch.substring(0, 3).toLowerCase();
+    return `${namePrefix}${rollNo}${branchPrefix}`;
+}
 
 // DOM Elements
 const branchSelect = document.getElementById('branchSelect');
@@ -449,27 +79,27 @@ const dashboardSection = document.getElementById('dashboardSection');
 const toast = document.getElementById('toast');
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
-    // Set current date
-    const today = new Date();
-    const dateStr = today.toLocaleDateString('en-IN', {
-        weekday: 'short',
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
-    document.getElementById('currentDate').textContent = dateStr;
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Set current date
+//     const today = new Date();
+//     const dateStr = today.toLocaleDateString('en-IN', {
+//         weekday: 'short',
+//         year: 'numeric',
+//         month: 'short',
+//         day: 'numeric'
+//     });
+//     document.getElementById('currentDate').textContent = dateStr;
 
-    // Event listeners
-    branchSelect.addEventListener('change', handleBranchChange);
-    classSelect.addEventListener('change', handleClassChange);
+//     // Event listeners
+//     branchSelect.addEventListener('change', handleBranchChange);
+//     classSelect.addEventListener('change', handleClassChange);
     
-    // Note form submission
-    document.getElementById('noteForm').addEventListener('submit', handleNoteSubmit);
+//     // Note form submission
+//     document.getElementById('noteForm').addEventListener('submit', handleNoteSubmit);
     
-    // Image preview
-    document.getElementById('noteImages').addEventListener('change', handleImagePreview);
-});
+//     // Image preview
+//     document.getElementById('noteImages').addEventListener('change', handleImagePreview);
+// });
 
 // Branch selection handler
 function handleBranchChange(e) {
@@ -515,7 +145,7 @@ function loadStudents() {
     }
     
     studentsList.innerHTML = students.map((student, index) => `
-        <div class="student-card" onclick="selectStudent('${student}', ${index + 1})">
+        <div class="student-card" onclick="requestPasswordForStudent('${student}', ${index + 1})">
             <div class="student-card-icon">
                 <i class="fas fa-user-circle"></i>
             </div>
@@ -523,13 +153,173 @@ function loadStudents() {
             <div class="student-card-meta">
                 Roll No: ${index + 1} • ${currentClass}
             </div>
+            <div class="student-card-lock">
+                <i class="fas fa-lock"></i> Protected
+            </div>
         </div>
     `).join('');
     
     studentsGrid.style.display = 'block';
 }
 
-// Select student and show dashboard
+// Request password before accessing student dashboard
+function requestPasswordForStudent(name, rollNo) {
+    // Store pending student info
+    pendingStudentAccess = {
+        name: name,
+        rollNo: rollNo,
+        class: currentClass,
+        branch: currentBranch
+    };
+    
+    // Update modal with student info
+    document.getElementById('passwordStudentName').textContent = name;
+    document.getElementById('passwordStudentMeta').textContent = `Roll No: ${rollNo} • ${currentClass} • ${currentBranch}`;
+    
+    // Generate student password for hint
+    const studentPassword = generateStudentPassword(rollNo, name, currentBranch);
+    document.getElementById('passwordHint').textContent = `Student Password Format: ${studentPassword.substring(0, 2)}***${studentPassword.substring(studentPassword.length - 2)}`;
+    
+    // Clear password input
+    document.getElementById('dashboardPassword').value = '';
+    document.querySelector('.password-input-wrapper').classList.remove('error');
+    
+    // Show password modal
+    document.getElementById('passwordModal').classList.add('open');
+    
+    // Focus on password input
+    setTimeout(() => {
+        document.getElementById('dashboardPassword').focus();
+    }, 300);
+}
+
+// Close password modal
+function closePasswordModal() {
+    document.getElementById('passwordModal').classList.remove('open');
+    pendingStudentAccess = null;
+    document.getElementById('dashboardPassword').value = '';
+    document.querySelector('.password-input-wrapper').classList.remove('error');
+}
+
+// Toggle password visibility
+function togglePasswordVisibility() {
+    const passwordInput = document.getElementById('dashboardPassword');
+    const toggleIcon = document.getElementById('passwordToggleIcon');
+    
+    if (passwordInput.type === 'password') {
+        passwordInput.type = 'text';
+        toggleIcon.classList.remove('fa-eye');
+        toggleIcon.classList.add('fa-eye-slash');
+    } else {
+        passwordInput.type = 'password';
+        toggleIcon.classList.remove('fa-eye-slash');
+        toggleIcon.classList.add('fa-eye');
+    }
+}
+
+// Handle password form submission
+// Initialize
+document.addEventListener('DOMContentLoaded', () => {
+    // Set current date
+    const today = new Date();
+    const dateStr = today.toLocaleDateString('en-IN', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    });
+    document.getElementById('currentDate').textContent = dateStr;
+
+    // Event listeners
+    branchSelect.addEventListener('change', handleBranchChange);
+    classSelect.addEventListener('change', handleClassChange);
+    
+    // Note form submission
+    document.getElementById('noteForm').addEventListener('submit', handleNoteSubmit);
+    
+    // Image preview
+    document.getElementById('noteImages').addEventListener('change', handleImagePreview);
+    
+    // Password form submission
+    const passwordForm = document.getElementById('passwordForm');
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            verifyPassword();
+        });
+    }
+});
+
+// Verify entered password
+function verifyPassword() {
+    if (!pendingStudentAccess) {
+        showToast('No student selected', 'error');
+        return;
+    }
+    
+    const enteredPassword = document.getElementById('dashboardPassword').value;
+    const studentPassword = generateStudentPassword(
+        pendingStudentAccess.rollNo,
+        pendingStudentAccess.name,
+        pendingStudentAccess.branch
+    );
+    
+    // Check if password matches student password OR teacher password
+    // if (enteredPassword === studentPassword || enteredPassword === TEACHER_PASSWORD) {
+    //     // Password correct - close modal and open dashboard
+    //     closePasswordModal();
+        
+    //     // Store authentication (optional - for session management)
+    //     const isTeacher = enteredPassword === TEACHER_PASSWORD;
+    //     sessionStorage.setItem('dashboardAuth', isTeacher ? 'teacher' : 'student');
+        
+    //     // Now actually select the student
+    //     selectStudent(
+    //         pendingStudentAccess.name,
+    //         pendingStudentAccess.rollNo
+    //     );
+        
+    //     showToast(
+    //         isTeacher ? 'Teacher access granted' : 'Welcome! Access granted',
+    //         'success'
+    //     );
+    // } 
+    if (enteredPassword === studentPassword || enteredPassword === TEACHER_PASSWORD) {
+
+        const student = { ...pendingStudentAccess }; // copy first
+
+        const isTeacher = enteredPassword === TEACHER_PASSWORD;
+        sessionStorage.setItem('dashboardAuth', isTeacher ? 'teacher' : 'student');
+
+        closePasswordModal(); // now safe
+
+        selectStudent(student.name, student.rollNo);
+
+        showToast(
+            isTeacher ? 'Teacher access granted' : 'Welcome! Access granted',
+            'success'
+        );
+    }
+
+    else {
+        // Password incorrect
+        const passwordWrapper = document.querySelector('.password-input-wrapper');
+        passwordWrapper.classList.add('error');
+        
+        showToast('Incorrect password. Please try again.', 'error');
+        
+        // Clear input
+        document.getElementById('dashboardPassword').value = '';
+        document.getElementById('dashboardPassword').focus();
+        
+        // Remove error class after animation
+        setTimeout(() => {
+            passwordWrapper.classList.remove('error');
+        }, 500);
+    }
+}
+
+// Select student and show dashboard (called after password verification)
 async function selectStudent(name, rollNo) {
     currentStudent = {
         name: name,
